@@ -5,7 +5,7 @@ import {AboutComponent} from './components/about.js'
 import { DataBindingComponent } from './components/databinding.js';
 import {Framework} from './js/framework.js'
 
-const app = new Framework();
+export const app = new Framework();
 // Define SPA routes
 app.route('/', HomeComponent);
 app.route('/about', AboutComponent);
