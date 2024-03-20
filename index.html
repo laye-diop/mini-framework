@@ -1,25 +1,68 @@
 <!-- index.html -->
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lyron Custom Framework SPA</title>
-</head>
+<html lang="en" data-framework="svelte">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="A TodoMVC app written with Svelte." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>TodoMVC: Svelte</title>
+        <link rel="stylesheet" href="app.css" />
+        <link rel="stylesheet" href="index.css" />
+        <link rel="stylesheet" href="base.css" />
+    </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#/">Home</a></li>
-                <li><a href="#/about">About</a></li>
-                <li><a href="#/databinding">Data Binding</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
+   
+    <!-- <main>
         <div id="app"></div>
-    </main>
+    </main> -->
+
+
+    <section class="todoapp" >
+        <header class="header">
+            <h1>todos</h1>
+            <!-- svelte-ignore a11y-autofocus -->
+            <input class="new-todo" id="inp" on:keydown={addItem} placeholder="What needs to be done?" autofocus />
+        </header>
+        <main class="main">
+            <div class="toggle-all-container">
+                <input id="toggle-all" class="toggle-all" type="checkbox"  />
+                <label for="toggle-all">Mark all as complete</label>
+            </div>
+
+            <ul class="todo-list" id="app">
+
+            </ul>
+            <footer class="footer">
+                <span class="todo-count">
+                    <strong>{numActive}</strong>
+                  items left
+                </span>
+            
+                <ul class="filters">
+                    <li><a class="selected" href="#/">All</a></li>
+                    <li><a  href="#/active">Active</a></li>
+                    <li><a  href="#/completed">Completed</a></li>
+                </ul>
+            
+                <button class="clear-completed" > Clear completed </button>
+            </footer>
+        </main>
+
+    </section>
+    <footer class="info">
+        <p>Double-click to edit a todo</p>
+        <p>Created by the TodoMVC Team</p>
+        <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+
+
+
+
+
+
+
     <script type="module" src="js/framework.js"></script>
     
     <script type="module" src="./app.js"></script>

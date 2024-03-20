@@ -16,6 +16,7 @@ export class Framework {
             const instance = new component();
             appContainer.innerHTML = instance.render();
             instance.bind(); // Initialize data bindings
+            instance.staticEvent()
             instance.events()
         };
         window.addEventListener('hashchange', navigateTo);
