@@ -11,7 +11,7 @@
 
 
 # Project structure
-    The mini-faramework project structure look like this:
+    The mini-faramework project structure looks like this:
 
 ```
 MINI FRAMEWORK
@@ -45,8 +45,8 @@ MINI FRAMEWORK
     As Mini-framework is a single page application, all the content
     off the app will be loaded in this page.
     This file contain two parts :
-- A dynamic part containg in a html alement that has the id #app    
-- A static part outside of the #app element. It's content will change depending of the route.
+- A dynamic part containg in a html alement that has the class .main    
+- A static part outside of the .main element. It's content will change depending of the route.
 
 #### app.js
     app.js is the file where every routes of the web application will be register. To learn more 
@@ -55,10 +55,10 @@ MINI FRAMEWORK
 
 
 #### components
-    This file contain all the componets of the web app
+    This folder contain all the components of the web app
     To add a component create a new file in this directory
     The component name is a class name that extends to the class Component
-    the render() method of a component return the html that will be load in the #app element in the index.html file
+    the render() method of a component return the html that will be load in the .main element in the index.html file
 ![Compoonent example](/static/images/homecomp.png)
     
     The component directory also contain a component.js file
@@ -87,7 +87,7 @@ MINI FRAMEWORK
 
 
 # Create html elements
-    To create html elements, you can use the render method of the Component class  to create and nest as many element as you want
+    To create html elements, you can use the render method of the Component class  to create and nest as many elements as you want
 [ see render method ](#components)
 
     or use the CreateElement method as bellow to create them one by one.
@@ -95,6 +95,7 @@ MINI FRAMEWORK
 ```javascript
     let div = this.CreateElement("div" , ["completed" , "container"])
 ```
+    To sanitise a string and avoid html injection, user this.sanitise(html)
 
 # Event Handling
     To add an event on an html element, use the method addEvent.
@@ -106,14 +107,14 @@ EX:
 
 ```
     If the element you want to add the event to is in the index.html file: 
-    use  staticEvent() to register the event , otherwise user events()
+    use  staticEvent() to register the event , otherwise use events()
 
 ```javascript
     events() {
-        this.addEvent("he" , "click" , ()=> {console.log("NEW CLICK HEEE")})
+        this.addEvent("btn" , "click" , ()=> {console.log("NEW CLICK")})
 
-        this.addEvent("todo_" + index  , "dblclick" , ()=> {
-            console.log("INPUT ON STATIC ELEMENT")
+        this.addEvent("todo"  , "dblclick" , ()=> {
+            console.log("INPUT ON DYNAMIQUE ELEMENT")
         })
     }
 
@@ -128,7 +129,7 @@ EX:
 ```
 
 # State Management and Templating
-    First left white a component that just increase or decrease a number
+    First let's write a component that just increase or decrease a number
 ```javascript
 import { Component } from "./component.js";
 
@@ -165,7 +166,7 @@ export class Test extends Component {
     You shoud have notice the propriety 
 ```this.proxyUser.data``` 
 
-    This propriety is dynamique andevery time it change the state of the web app is apdated.
+    This propriety is dynamique and every time it change the state of the web app is apdated.
 
 ```template```
 

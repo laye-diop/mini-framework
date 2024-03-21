@@ -45,4 +45,7 @@ export class Component  {
         let element = document.querySelector(ref)
         return element
     }
+    sanitise(s) {
+        return s.replaceAll("<" , "&lt;").replaceAll(">" , "&gt;").replaceAll("/" , "&#x2F;")
+    }
 }
