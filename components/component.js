@@ -26,8 +26,12 @@ export class Component  {
     parse(textTemplate, data) {
         return new Function("data ", `const out = [];\n${((`##${textTemplate}##`).replace(/##\s*</g, "\nout.push(`<").replace(/>\s*##/g, ">`);\n").replace(/{=/g, "${").replace(/=}/g, "}").replace(/^##/, "").replace(/##$/, ""))}\nreturn out.join("");`)(data);
     }
-    CreateElement(tagName) {
-        document.createElement(tagName)
+    CreateElement(tagName , classes = []) {
+        const element = document.createElement(tagName);
+        if (Array.isArray(classes)) {
+            element.classList.add(...classes);
+        }
+        return element;
     }
     getElement(id){
         let element = document.getElementById(id)
