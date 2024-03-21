@@ -52,7 +52,7 @@ export class Todo extends Component {
 
         <footer class="footer">
         <span class="todo-count">
-            <strong>{= data.filter(item => !item.completed).length =}</strong>
+            <strong>{=JSON.parse(localStorage.getItem("todos")) == undefined ? 0 : JSON.parse(localStorage.getItem("todos")).filter(item => !item.completed).length  =}</strong>
           items left
         </span>
     
@@ -188,13 +188,9 @@ export class Todo extends Component {
           id: generateId(),
           checked: false,
         };
-        this.proxyUser.data = [...this.proxyUser.data, todo];
-
+        this.proxyUser.data.push(todo) 
         this.saveTodos();
-        // this.proxyUser.data = this.proxyUser.data
-        // value = ''
-        // ev.target.value = ""
-        // document.getElementById("inp").value = "";
+        this.proxyUser.data = this.proxyUser.data
       }
     });
   }

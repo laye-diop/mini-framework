@@ -59,7 +59,7 @@ MINI FRAMEWORK
     To add a component create a new file in this directory
     The component name is a class name that extends to the class Component
     the render() method of a component return the html that will be load in the #app element in the index.html file
-![Compoonent example](homecomp.png)
+![Compoonent example](/static/images/homecomp.png)
     
     The component directory also contain a component.js file
     It is a system file which must not be modified
@@ -160,7 +160,7 @@ export class Test extends Component {
 
 ```
     Here is the result
-![Templating example](res.gif)
+![Templating example](/static/images/res.gif)
 
     You shoud have notice the propriety 
 ```this.proxyUser.data``` 

@@ -31,7 +31,7 @@ export class Component  {
     render(){}
     bind(){}
     staticEvent(){}
-    parse(textTemplate, data) {
+    parse(textTemplate, data = []) {
         return new Function("data ", `const out = [];\n${((`##${textTemplate}##`).replace(/##\s*</g, "\nout.push(`<").replace(/>\s*##/g, ">`);\n").replace(/{=/g, "${").replace(/=}/g, "}").replace(/^##/, "").replace(/##$/, ""))}\nreturn out.join("");`)(data);
     }
     CreateElement(tagName , classes = []) {
