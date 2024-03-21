@@ -11,22 +11,18 @@ export class Todo extends Component {
     super();
     this.proxyUser.data = JSON.parse(localStorage.getItem("todos")) || [];
     this.allChecked = false;
-
-    let route = window.location.hash.slice(1);
-    // let itemsToDisplay = [];
-    // console.log("route", route, JSON.parse(localStorage.getItem('todoData')));
-    if (route === "/active") {
-      this.proxyUser.data = this.proxyUser.data.filter(
-        (item) => !item.completed
-      );
-    } else if (route === "/completed") {
-      this.proxyUser.data = this.proxyUser.data.filter(
-        (item) => item.completed
-      );
-    }
   }
 
   render() {
+    let route = window.location.hash.slice(1);
+    let filteredData = this.proxyUser.data;
+
+    if (route === "/active") {
+      filteredData = this.proxyUser.data.filter((item) => !item.completed);
+    } else if (route === "/completed") {
+      filteredData = this.proxyUser.data.filter((item) => item.completed);
+    }
+
     return this.parse(
       `
         <div class="toggle-all-container">
@@ -69,7 +65,7 @@ export class Todo extends Component {
         <button class="clear-completed" > Clear completed </button>
     </footer>
         `,
-      this.proxyUser.data
+      filteredData
     );
   }
 
@@ -136,15 +132,23 @@ export class Todo extends Component {
         }
       );
 
-      this.addEventWithDataSet(`[data-id="${item.id}"] .destroy`, "click", () =>{
-        console.log("enter", item.id, index);
-        this.proxyUser.data = this.proxyUser.data.filter(todo => todo.id !== item.id);
-        this.saveTodos();
-      })
+      this.addEventWithDataSet(
+        `[data-id="${item.id}"] .destroy`,
+        "click",
+        () => {
+          console.log("enter", item.id, index);
+          this.proxyUser.data = this.proxyUser.data.filter(
+            (todo) => todo.id !== item.id
+          );
+          this.saveTodos();
+        }
+      );
 
       this.addEvent(".clear-completed", "click", () => {
         console.log("Clear completed clicked");
-        this.proxyUser.data = this.proxyUser.data.filter(todo => !todo.completed);
+        this.proxyUser.data = this.proxyUser.data.filter(
+          (todo) => !todo.completed
+        );
         this.saveTodos();
       });
     });
@@ -167,7 +171,6 @@ export class Todo extends Component {
         this.proxyUser.data = this.proxyUser.data;
       }
     });
-
   }
 
   saveTodos() {
