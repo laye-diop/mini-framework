@@ -1,59 +1,198 @@
 import { Component } from "./component.js";
 
+let todoCounter = 1;
+
+function generateId() {
+  return todoCounter++;
+}
+
 export class Todo extends Component {
-    constructor() {
-        super()
-        this.proxyUser.data = []
+  constructor() {
+    super();
+    this.proxyUser.data = JSON.parse(localStorage.getItem("todos")) || [];
+    this.allChecked = false;
+
+    let route = window.location.hash.slice(1);
+    // let itemsToDisplay = [];
+    // console.log("route", route, JSON.parse(localStorage.getItem('todoData')));
+    if (route === "/active") {
+      this.proxyUser.data = this.proxyUser.data.filter(
+        (item) => !item.completed
+      );
+    } else if (route === "/completed") {
+      this.proxyUser.data = this.proxyUser.data.filter(
+        (item) => item.completed
+      );
     }
-    
-    render() {
-        return this.parse(`
-        
-        for (let [index ,item] of data.entries()) { ##    
-                <li class="">
+  }
+
+  render() {
+    return this.parse(
+      `
+        <div class="toggle-all-container">
+        <input class="toggle-all" type="checkbox"  />
+        <label for="toggle-all" class="">Mark all as complete</label>
+        </div>
+
+        <ul class="todo-list">
+            ## for (let [index ,item] of data.entries()) { ##    
+                <li data-id="{= item.id =}" class="{= item.completed ? 'completed' : '' =}">
                     ## if (!item.editing) { ##
                         <div class="view">
-                            <input  class="toggle" type="checkbox" />
-                            <label id="todo_{= index =}" on:dblclick={startEdit}>{= item.value  =}</label>
-                            <button on:click={removeItem} class="destroy" />
+                            <input class="toggle" type="checkbox" {= item.completed ? 'checked' : '' =} />
+                            <label >{= item.value =}</label>
+                            <button class="destroy" />
                         </div>
-                    ##} else { ##
+                    ## } else { ##
                         <div class="input-container">
-                            <input id="todo_input_{= index =}" value={= item.value =} id="edit-todo-input" class="edit" autofocus />
+                            <input value={= item.value =} class="edit" autofocus />
                             <label class="visually-hidden" for="edit-todo-input">Edit Todo Input</label>
                         </div>
                     ## } ##
                 </li>
-        ## } 
-        ` , this.proxyUser.data)
-    }
+            ## } ##
+        </ul>
+
+
+        <footer class="footer">
+        <span class="todo-count">
+            <strong>{= data.filter(item => !item.completed).length =}</strong>
+          items left
+        </span>
     
-    events() {
-        this.addEvent("he" , "click" , ()=> {console.log("NEW CLICK HEEE")})
+        <ul class="filters">
+            <li><a class="selected" href="#/">All</a></li>
+            <li><a  href="#/active">Active</a></li>
+            <li><a  href="#/completed">Completed</a></li>
+        </ul>
+    
+        <button class="clear-completed" > Clear completed </button>
+    </footer>
+        `,
+      this.proxyUser.data
+    );
+  }
 
-        this.proxyUser.data.forEach((element , index) => {
-            this.addEvent("todo_" + index  , "dblclick" , ()=> {
-                this.proxyUser.data[index].editing = true
-                this.proxyUser.data = this.proxyUser.data
+  events() {
+    this.proxyUser.data.forEach((item, index) => {
+      this.addEventWithDataSet(
+        `[data-id="${item.id}"] .toggle`,
+        "change",
+        (event) => {
+          item.completed = !item.completed;
 
-            })
-            this.addEvent("todo_input_" + index , "blur" , ()=> {
-                this.proxyUser.data[index].editing = false
-                this.proxyUser.data[index].value = this.getElement("todo_input_" + index).value
-                this.proxyUser.data = this.proxyUser.data
-            })
-            
-        });
-    }
+          this.saveTodos();
+          this.proxyUser.data = this.proxyUser.data;
+        }
+      );
 
-    staticEvent() {
-        this.addEvent("inp" , "keydown" , (ev)=> {
-            if (ev.key == 'Enter' ) {
-                let value = document.getElementById("inp").value
-                let todo = { value : value , checked : "" , editing : false}
-                this.proxyUser.data = [...this.proxyUser.data , todo]
-                console.log("NEW PUSH" , ev)
+      this.addEventWithDataSet(
+        `[data-id="${item.id}"] label`,
+        "dblclick",
+        () => {
+          const todoItem = this.proxyUser.data.find(
+            (todo) => todo.id == item.id
+          );
+          if (todoItem) {
+            todoItem.editing = true;
+            this.proxyUser.data = this.proxyUser.data;
+          }
+        }
+      );
+
+      this.addEventWithDataSet(
+        `[data-id="${item.id}"] .edit`,
+        "blur",
+        (event) => {
+          console.log("Todo Id: ", item.id);
+          const todoItem = this.proxyUser.data.find(
+            (todo) => todo.id == item.id
+          );
+          if (todoItem) {
+            console.log("hereee", event);
+            todoItem.value = event.target.value;
+            todoItem.editing = false;
+            this.saveTodos();
+            this.proxyUser.data = this.proxyUser.data;
+          }
+        }
+      );
+
+      this.addEventWithDataSet(
+        `[data-id="${item.id}"] .edit`,
+        "keydown",
+        (event) => {
+          if (event.key === "Enter") {
+            const todoItem = this.proxyUser.data.find(
+              (todo) => todo.id == item.id
+            );
+            if (todoItem) {
+              todoItem.value = event.target.value;
+              todoItem.editing = false;
+              this.saveTodos();
+              this.proxyUser.data = this.proxyUser.data;
             }
-        })
-    }
+          }
+        }
+      );
+
+      this.addEventWithDataSet(`[data-id="${item.id}"] .destroy`, "click", () =>{
+        console.log("enter", item.id, index);
+        this.proxyUser.data = this.proxyUser.data.filter(todo => todo.id !== item.id);
+        this.saveTodos();
+      })
+
+      this.addEvent(".clear-completed", "click", () => {
+        console.log("Clear completed clicked");
+        this.proxyUser.data = this.proxyUser.data.filter(todo => !todo.completed);
+        this.saveTodos();
+      });
+    });
+
+    this.addEventWithDataSet(".toggle-all-container label", "click", () => {
+      console.log("here");
+      if (!this.allChecked) {
+        this.proxyUser.data.forEach((elem, ind) => {
+          elem.completed = true;
+          this.saveTodos();
+        });
+        this.allChecked = true;
+        this.proxyUser.data = this.proxyUser.data;
+      } else {
+        this.proxyUser.data.forEach((elem, ind) => {
+          elem.completed = false;
+          this.saveTodos();
+        });
+        this.allChecked = false;
+        this.proxyUser.data = this.proxyUser.data;
+      }
+    });
+
+  }
+
+  saveTodos() {
+    localStorage.setItem("todos", JSON.stringify(this.proxyUser.data));
+  }
+
+  staticEvent() {
+    this.addEventWithDataSet(".new-todo", "keydown", (ev) => {
+      if (ev.key == "Enter") {
+        var value = document.querySelector(".new-todo").value;
+        let todo = {
+          value: value,
+          completed: false,
+          editing: false,
+          id: generateId(),
+          checked: false,
+        };
+        this.proxyUser.data = [...this.proxyUser.data, todo];
+
+        this.saveTodos();
+        // this.proxyUser.data = this.proxyUser.data
+        // value = ''
+        // ev.target.value = ""
+        // document.getElementById("inp").value = "";
+      }
+    });
+  }
 }

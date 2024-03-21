@@ -5,20 +5,28 @@ export class Component  {
         this.handler = {
             set(target, property, value) {
                 target[property] = value
-                document.getElementById("app").innerHTML  = self.render()
+                document.querySelector(".main").innerHTML  = self.render()
                 self.events()
                 return true
             }
         }
         this.proxyUser = new Proxy(this.data, this.handler);
     }
-    addEvent(id , even , callback) {
-        let elem = document.getElementById(id)
+    addEvent(el , even , callback) {
+        let elem = document.querySelector(el)
         if (elem != null) {
             elem.addEventListener(even , callback) 
     
         }
     }
+
+    addEventWithDataSet(dataset, event, callback) { 
+        let elem = document.querySelector(dataset)
+        if (elem != null) {
+            elem.addEventListener(event, callback) 
+        }
+    }
+
     events(){}
     render(){}
     bind(){}
@@ -29,8 +37,8 @@ export class Component  {
     CreateElement(tagName) {
         document.createElement(tagName)
     }
-    getElement(id){
-        let element = document.getElementById(id)
+    getElement(ref){
+        let element = document.querySelector(ref)
         return element
     }
 }

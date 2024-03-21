@@ -15,7 +15,7 @@ app.route('/', Todo);
 // app.route('/databinding', DataBindingComponent);
 
 app.route("/active" , Todo )
-app.route("/completed" , Todo )
+app.route("/completed" , Todo)
 
 // Start the application
 app.start()

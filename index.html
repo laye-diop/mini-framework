@@ -23,31 +23,12 @@
         <header class="header">
             <h1>todos</h1>
             <!-- svelte-ignore a11y-autofocus -->
-            <input class="new-todo" id="inp" on:keydown={addItem} placeholder="What needs to be done?" autofocus />
+            <input class="new-todo" placeholder="What needs to be done?" autofocus />
         </header>
         <main class="main">
-            <div class="toggle-all-container">
-                <input id="toggle-all" class="toggle-all" type="checkbox"  />
-                <label for="toggle-all">Mark all as complete</label>
-            </div>
 
-            <ul class="todo-list" id="app">
 
-            </ul>
-            <footer class="footer">
-                <span class="todo-count">
-                    <strong>{numActive}</strong>
-                  items left
-                </span>
-            
-                <ul class="filters">
-                    <li><a class="selected" href="#/">All</a></li>
-                    <li><a  href="#/active">Active</a></li>
-                    <li><a  href="#/completed">Completed</a></li>
-                </ul>
-            
-                <button class="clear-completed" > Clear completed </button>
-            </footer>
+
         </main>
 
     </section>

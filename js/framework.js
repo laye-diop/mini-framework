@@ -12,7 +12,7 @@ export class Framework {
         const navigateTo = () => {
             const path = window.location.hash.slice(1);
             const component = this.routes[path] || NotFoundComponent;
-            const appContainer = document.querySelector('#app');
+            const appContainer = document.querySelector('.main');
             const instance = new component();
             appContainer.innerHTML = instance.render();
             instance.bind(); // Initialize data bindings
