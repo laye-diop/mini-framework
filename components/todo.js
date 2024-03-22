@@ -41,7 +41,7 @@ export class Todo extends Component {
                         </div>
                     ## } else { ##
                         <div class="input-container">
-                            <input value={= item.value =} class="edit" autofocus />
+                            <input value="{= item.value =}" class="edit" autofocus />
                             <label class="visually-hidden" for="edit-todo-input">Edit Todo Input</label>
                         </div>
                     ## } ##
@@ -186,7 +186,7 @@ export class Todo extends Component {
     this.addEventWithDataSet(".new-todo", "keydown", (ev) => {
       if (ev.key == "Enter") {
         var elem = document.querySelector(".new-todo");
-        var value = elem.value
+        var value = elem.value.trim()
         let todo = {
           value: this.sanitise(value),
           completed: false,

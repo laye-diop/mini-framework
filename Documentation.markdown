@@ -99,7 +99,7 @@ MINI FRAMEWORK
 
 # Event Handling
     To add an event on an html element, use the method addEvent.
-    The first argument is the element id , the second is the event 
+    The first argument is the element id or className or tagName , the second is the event 
     and the last is the callback function.
 ```javascript
 EX:
@@ -111,9 +111,9 @@ EX:
 
 ```javascript
     events() {
-        this.addEvent("btn" , "click" , ()=> {console.log("NEW CLICK")})
+        this.addEvent("#btn" , "click" , ()=> {console.log("NEW CLICK")})
 
-        this.addEvent("todo"  , "dblclick" , ()=> {
+        this.addEvent(".todo"  , "dblclick" , ()=> {
             console.log("INPUT ON DYNAMIQUE ELEMENT")
         })
     }
@@ -148,11 +148,11 @@ export class Test extends Component {
             ` , this.proxyUser.data);
     }
     events() {
-        this.addEvent("moins" , "click" , ()=> {
+        this.addEvent("#moins" , "click" , ()=> {
             this.proxyUser.data = this.proxyUser.data - 1
         })
 
-        this.addEvent("plus" , "click" , ()=> {
+        this.addEvent("#plus" , "click" , ()=> {
             this.proxyUser.data = this.proxyUser.data + 1
         })
     }
@@ -174,7 +174,7 @@ export class Test extends Component {
 ```this.parse()```
 
     It takes as params the html and the data you want to parse the html with
-    Inside the html, to display a dynamyque data, surround it with "{=" and "=}"
+    Inside the html, to display a dynamique data, surround it with "{=" and "=}"
 ```javascript
 Ex : 
  <p>Welcome {= data.name =}</p>
