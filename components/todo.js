@@ -107,7 +107,7 @@ export class Todo extends Component {
           );
           if (todoItem) {
             console.log("hereee", event);
-            todoItem.value = event.target.value;
+            todoItem.value = this.sanitise(event.target.value);
             todoItem.editing = false;
             this.saveTodos();
             this.proxyUser.data = this.proxyUser.data;
@@ -124,7 +124,7 @@ export class Todo extends Component {
               (todo) => todo.id == item.id
             );
             if (todoItem) {
-              todoItem.value = event.target.value;
+              todoItem.value = this.sanitise(event.target.value);
               todoItem.editing = false;
               this.saveTodos();
               this.proxyUser.data = this.proxyUser.data;
