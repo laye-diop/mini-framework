@@ -1,12 +1,30 @@
+import transform from "./transform.js"
+import diff from "./diff.js"
 export class Component  {
     constructor() {
         this.data = {}
+        this.Vdom = {}
         let self = this
+        
         this.handler = {
             set(target, property, value) {
+                console.log("calll")
                 target[property] = value
-                document.querySelector(".main").innerHTML  = self.render()
-                self.events()
+                var $root = document.querySelector(".main")
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(` <main class="main">` + self.render() + `</main>` , "text/html");
+                let newVdom =  transform(doc.querySelector(".main"))
+                
+                if (Object.keys(self.Vdom).length === 0) {
+                    $root.innerHTML  = self.render()
+                } else {
+                    let $rootEl = document.querySelector(".main")
+                    let patch = diff(self.Vdom , newVdom)
+                    console.log("the path" , patch)
+                    patch($rootEl);
+                     
+                    self.Vdom = newVdom
+                }
                 return true
             }
         }
