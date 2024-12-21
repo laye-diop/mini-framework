@@ -41,7 +41,7 @@ export class Todo extends Component {
                         </div>
                     ## } else { ##
                         <div class="input-container">
-                            <input value={= item.value =} class="edit" autofocus />
+                            <input value="{= item.value =}" class="edit" autofocus />
                             <label class="visually-hidden" for="edit-todo-input">Edit Todo Input</label>
                         </div>
                     ## } ##
@@ -49,21 +49,22 @@ export class Todo extends Component {
             ## } ##
         </ul>
 
-
-        <footer class="footer">
-        <span class="todo-count">
-            <strong>{= data.filter(item => !item.completed).length =}</strong>
-          items left
-        </span>
-    
-        <ul class="filters">
-            <li><a class="selected" href="#/">All</a></li>
-            <li><a  href="#/active">Active</a></li>
-            <li><a  href="#/completed">Completed</a></li>
-        </ul>
-    
-        <button class="clear-completed" > Clear completed </button>
-    </footer>
+        ## if (JSON.parse(localStorage.getItem("todos")) != undefined && JSON.parse(localStorage.getItem("todos")).length > 0) { ##
+          <footer class="footer">
+            <span class="todo-count">
+                <strong>{=JSON.parse(localStorage.getItem("todos")) == undefined ? 0 : JSON.parse(localStorage.getItem("todos")).filter(item => !item.completed).length  =}</strong>
+              items left
+            </span>
+        
+            <ul class="filters">
+                <li><a class="selected" href="#/">All</a></li>
+                <li><a  href="#/active">Active</a></li>
+                <li><a  href="#/completed">Completed</a></li>
+            </ul>
+        
+            <button class="clear-completed" > Clear completed </button>
+         </footer>
+        ## }
         `,
       filteredData
     );
@@ -106,7 +107,7 @@ export class Todo extends Component {
           );
           if (todoItem) {
             console.log("hereee", event);
-            todoItem.value = event.target.value;
+            todoItem.value = this.sanitise(event.target.value);
             todoItem.editing = false;
             this.saveTodos();
             this.proxyUser.data = this.proxyUser.data;
@@ -123,7 +124,7 @@ export class Todo extends Component {
               (todo) => todo.id == item.id
             );
             if (todoItem) {
-              todoItem.value = event.target.value;
+              todoItem.value = this.sanitise(event.target.value);
               todoItem.editing = false;
               this.saveTodos();
               this.proxyUser.data = this.proxyUser.data;
@@ -137,10 +138,11 @@ export class Todo extends Component {
         "click",
         () => {
           console.log("enter", item.id, index);
-          this.proxyUser.data = this.proxyUser.data.filter(
+          let d = this.proxyUser.data.filter(
             (todo) => todo.id !== item.id
           );
-          this.saveTodos();
+          this.save(d);
+          this.proxyUser.data  = d
         }
       );
 
@@ -176,25 +178,28 @@ export class Todo extends Component {
   saveTodos() {
     localStorage.setItem("todos", JSON.stringify(this.proxyUser.data));
   }
+  save(data) {
+    localStorage.setItem("todos", JSON.stringify(data));
+  }
 
   staticEvent() {
     this.addEventWithDataSet(".new-todo", "keydown", (ev) => {
       if (ev.key == "Enter") {
-        var value = document.querySelector(".new-todo").value;
+        var elem = document.querySelector(".new-todo");
+        var value = elem.value.trim()
         let todo = {
-          value: value,
+          value: this.sanitise(value),
           completed: false,
           editing: false,
           id: generateId(),
           checked: false,
         };
-        this.proxyUser.data = [...this.proxyUser.data, todo];
-
-        this.saveTodos();
-        // this.proxyUser.data = this.proxyUser.data
-        // value = ''
-        // ev.target.value = ""
-        // document.getElementById("inp").value = "";
+        if (todo.value.length > 0) {
+          elem.value = ""
+          this.proxyUser.data.push(todo) 
+          this.saveTodos();
+          this.proxyUser.data = this.proxyUser.data
+        }
       }
     });
   }

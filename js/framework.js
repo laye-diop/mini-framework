@@ -1,5 +1,6 @@
 // framework.js
 import {NotFoundComponent} from '../components/notfound.js'
+import transform from '../components/transform.js';
 
 export class Framework {
     constructor() {
@@ -15,6 +16,7 @@ export class Framework {
             const appContainer = document.querySelector('.main');
             const instance = new component();
             appContainer.innerHTML = instance.render();
+            instance.Vdom = transform(appContainer)
             instance.bind(); // Initialize data bindings
             instance.staticEvent()
             instance.events()
